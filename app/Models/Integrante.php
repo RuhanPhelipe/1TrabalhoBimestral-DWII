@@ -8,6 +8,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Integrante extends Model
 {
-    use HasFactory, SoftDeletes;
-    protected $fillable = ['nome', 'biografia'];
+    use HasFactory, softDeletes;
 }

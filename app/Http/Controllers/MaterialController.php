@@ -5,121 +5,109 @@ namespace App\Http\Controllers;
 use App\Models\Material;
 use Illuminate\Http\Request;
 
-class MaterialController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $data = Material::all();
+class MaterialController extends Controller {
 
-        return view("material.index", compact($data));
+    private $path = "fotos/materials";
+
+    public function index() {
+        $data = Material::orderBy('nome')->get();
+        return view('material.index', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view("material.create");
+    public function create() {
+        return view('material.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $rules = [
             'nome' => 'required|max:100|min:10',
-            'descricao' => 'required|max:500|min:20'
+            'descricao' => 'required|max:500|min:20',
+            'foto' => 'required'
         ];
 
         $msgs = [
             "required" => "O preenchimento do campo [:attribute] é obrigatório!",
             "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
             "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
-            "unique" => "Já existe um endereço cadastrado com esse [:attribute]!"
         ];
 
         $request->validate($rules, $msgs);
 
-        Material::create([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao
-        ]);
+        if($request->hasFile('foto')) {
 
-        return redirect()->route("material.index");
+            $reg = new Material();
+            $reg->nome = $request->nome;
+            $reg->descricao = $request->descricao;
+            $reg->save();
 
+            $id = $reg->id;
+            $extensao_arq = $request->file('foto')->getClientOriginalExtension();
+            $nome_arq = $id.'_'.time().'.'.$extensao_arq;
+            $request->file('foto')->storeAs("public/$this->path", $nome_arq);
+            $reg->foto = $this->path."/".$nome_arq;
+            $reg->save();
+            
+        }
+
+        return redirect()->route('material.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id){ }
+    public function show($id) { }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
+    public function edit($id) {
         $data = Material::find($id);
 
-        if (!isset($data)) { return "<h1>ID: $id não encontrado!</h1>"; } 
+        if(!isset($data)) { return "<h1> $id não encontrado </h1>"; }
 
         return view("material.edit", compact('data'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $obj = Material::find($id);
 
-        if (!isset($obj)) { return "<h1>ID: $id não encontrado!</h1>"; }
+        if(!isset($obj)) { return "<h1> $id não encontrado </h1>"; }
 
-        $obj->fill([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao
-        ]);
+        $rules = [
+            'nome' => 'required|max:100|min:10',
+            'descricao' => 'required|max:500|min:20',
+            'foto' => 'required'
+        ];
 
-        $obj->save();
+        $msgs = [
+            "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+            "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
+            "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
+        ];
+
+        $request->validate($rules, $msgs);
+
+        if($request->hasFile('foto')) {
+
+            $obj->nome = $request->nome;
+            $obj->descricao = $request->descricao;
+            $obj->save();
+
+            $id = $obj->id;
+            $extensao_arq = $request->file('foto')->getClientOriginalExtension();
+            $nome_arq = $id.'_'.time().'.'.$extensao_arq;
+            $request->file('foto')->storeAs("public/$this->path", $nome_arq);
+            $obj->foto = $this->path."/".$nome_arq;
+            $obj->save();
+            
+        }
 
         return redirect()->route("material.index");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
+    public function destroy($id) {
+
         $obj = Material::find($id);
 
-        if (!isset($obj)) { return "<h1>ID: $id não encontrado!</h1>"; }
+        if(!isset($obj)) { return "<h1> $id não encontrado </h1>"; }
 
-        $obj->destroy();
+        $obj->destroy($id);
 
         return redirect()->route("material.index");
+
     }
 }

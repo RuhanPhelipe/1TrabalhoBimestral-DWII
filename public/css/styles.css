@@ -1,0 +1,49 @@
+.bg-primary-color {
+    background-color: #E0D0C1;
+}
+
+.color-primary-color {
+    color: #E0D0C1;
+}
+
+.bg-secondary-color {
+    background-color: #A76D60;
+}
+
+.color-secondary-color {
+    color: #A76D60;
+}
+
+.bg-third-color {
+    background-color: #601700;
+}
+
+.color-third-color {
+    color: #601700;
+}
+
+.faixa {
+    height: 20px;
+}
+
+.card-a {
+    height: 200px;
+    width: 200px;
+    border-radius: 20px;
+}
+
+.col-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divide {
+    height: 1.5px;
+    background-color: black;
+    margin: 10px 0px;
+}
+
+.row-card {
+    height: 400px;
+}

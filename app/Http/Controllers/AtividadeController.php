@@ -5,125 +5,114 @@ namespace App\Http\Controllers;
 use App\Models\Atividade;
 use Illuminate\Http\Request;
 
-class AtividadeController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $data = Atividade::all();
-        return view('atividades.index', compact('data'));
+class AtividadeController extends Controller {
+
+    private $path = "fotos/atividades";
+    
+    public function index() {
+        $data = Atividade::orderBy('data')->get();
+        return view('atividade.index', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('atividades.create');
+    public function create() {
+        return view('atividade.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $rules = [
             'nome' => 'required|max:100|min:10',
             'descricao' => 'required|max:500|min:20',
-            'data' => 'required'
+            'data' => 'required',
+            'foto' => 'required'
         ];
 
         $msgs = [
             "required" => "O preenchimento do campo [:attribute] é obrigatório!",
             "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
             "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
-            "unique" => "Já existe um endereço cadastrado com esse [:attribute]!"
         ];
 
         $request->validate($rules, $msgs);
 
-        Atividade::create([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-            'date' => $request->date,
-        ]);
+        if($request->hasFile('foto')) {
+
+            $reg = new Atividade();
+            $reg->nome = $request->nome;
+            $reg->descricao = $request->descricao;
+            $reg->data = $request->data;
+            $reg->save();
+
+            $id = $reg->id;
+            $extensao_arq = $request->file('foto')->getClientOriginalExtension();
+            $nome_arq = $id.'_'.time().'.'.$extensao_arq;
+            $request->file('foto')->storeAs("public/$this->path", $nome_arq);
+            $reg->foto = $this->path."/".$nome_arq;
+            $reg->save();
+            
+        }
+
+        return redirect()->route('atividade.index');
+    }
+
+    public function show($id) { }
+
+    public function edit($id) {
+        $data = Atividade::find($id);
+
+        if(!isset($data)) { return "<h1> $id não encontrado </h1>"; }
+
+        return view("atividade.edit", compact('data'));
+    }
+
+    public function update(Request $request, $id) {
+        
+        $obj = Atividade::find($id);
+
+        if(!isset($obj)) { return "<h1> $id não encontrado </h1>"; }
+
+        $rules = [
+            'nome' => 'required|max:100|min:10',
+            'descricao' => 'required|max:500|min:20',
+            'data' => 'required',
+            'foto' => 'required'
+        ];
+
+        $msgs = [
+            "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+            "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
+            "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
+        ];
+
+        $request->validate($rules, $msgs);
+
+        if($request->hasFile('foto')) {
+
+            $obj->nome = $request->nome;
+            $obj->descricao = $request->descricao;
+            $obj->data = $request->data;
+            $obj->save();
+
+            $id = $obj->id;
+            $extensao_arq = $request->file('foto')->getClientOriginalExtension();
+            $nome_arq = $id.'_'.time().'.'.$extensao_arq;
+            $request->file('foto')->storeAs("public/$this->path", $nome_arq);
+            $obj->foto = $this->path."/".$nome_arq;
+            $obj->save();
+            
+        }
 
         return redirect()->route("atividade.index");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $data = Atividade::find($id);
-
-        if (!isset($data)) { return "<h1>ID: $id não encontrado!</h1>"; } 
-
-        return view("atividades.edit", compact($data));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
+    public function destroy($id) {
+        
         $obj = Atividade::find($id);
 
-        if (!isset($obj)) { return "<h1>ID: $id não encontrado!"; }
+        if(!isset($obj)) { return "<h1> $id não encontrado </h1>"; }
 
-        $obj->fill([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-            'date' => $request->date,
-        ]);
+        $obj->destroy($id);
 
-        $obj->save();
+        return redirect()->route("atividade.index");
 
-        return redirect()->route('atividades.index');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $obj = Atividade::find($id);
-
-        if(!isset($obj)) { return "<h1>ID: $id não encontrado!"; }
-
-        $obj->destroy();
-
-        return redirect()->route('atividades.index');
     }
 }
