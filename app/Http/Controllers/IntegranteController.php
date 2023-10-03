@@ -24,7 +24,7 @@ class IntegranteController extends Controller {
         // php artisan storage:link
         // Colocar os arquivos de imagem dentro da pasta "/storage/app/public"
 
-        $regras = [
+        $rules = [
             'nome' => 'required|max:100|min:10',
             'biografia' => 'required|max:1000|min:20',
             'foto' => 'required'
@@ -36,7 +36,7 @@ class IntegranteController extends Controller {
             "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
         ];
 
-        $request->validate($regras, $msgs);
+        $request->validate($rules, $msgs);
 
         if($request->hasFile('foto')) {
 
@@ -68,10 +68,51 @@ class IntegranteController extends Controller {
     }
 
     public function update(Request $request, $id) {
-        
+        $obj = Integrante::find($id);
+
+        if(!isset($obj)) { return "<h1> $id não encontrado </h1>"; }
+
+        $rules = [
+            'nome' => 'required|max:100|min:10',
+            'biografia' => 'required|max:1000|min:20',
+            'foto' => 'required'
+        ];
+
+        $msgs = [
+            "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+            "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres!",
+            "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres!",
+        ];
+
+        $request->validate($rules, $msgs);
+
+        if($request->hasFile('foto')) {
+
+            // Insert no Banco
+            $obj = new Integrante();
+            $obj->nome = $request->nome;
+            $obj->biografia = $request->biografia;
+            $obj->save();    
+
+            // Upload da Foto
+            $id = $obj->id;
+            $extensao_arq = $request->file('foto')->getClientOriginalExtension();
+            $nome_arq = $id.'_'.time().'.'.$extensao_arq;
+            $request->file('foto')->storeAs("public/$this->path", $nome_arq);
+            $obj->foto = $this->path."/".$nome_arq;
+            $obj->save();
+        }
+
+        return redirect()->route("integrante.index");
     }
 
     public function destroy($id) {
-        
+        $obj = Integrante::find($id);
+
+        if(!isset($obj)) { return "<h1> $id não encontrado </h1>"; }
+
+        $obj->destroy($id);
+
+        return redirect()->route("integrante.index");
     }
 }

@@ -88,7 +88,7 @@
         </div>
     </nav>
     <div class="faixa bg-third-color"></div>
-    <div class="container py-4">
+    <div class="container mt-5 py-4">
         <div class="row">
             <div class="col-2">
                 @if($menu == "admin")

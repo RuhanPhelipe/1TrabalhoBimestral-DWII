@@ -66,7 +66,20 @@
     <div class="row">
         <div class="col" >
             <div class="input-group mb-3">
-                <span class="input-group-text bg-success text-white">Foto</span>
+                <span class="input-group-text bg-success text-white">Foto equipe</span>
+                <input class="form-control @if($errors->has('foto')) is-invalid @endif" type="file" name="foto"/>
+                @if($errors->has('foto'))
+                    <div class='invalid-feedback'>
+                        {{ $errors->first('foto') }}
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" >
+            <div class="input-group mb-3">
+                <span class="input-group-text bg-success text-white">Foto atividade</span>
                 <input class="form-control @if($errors->has('foto')) is-invalid @endif" type="file" name="foto"/>
                 @if($errors->has('foto'))
                     <div class='invalid-feedback'>

@@ -18,8 +18,10 @@ class CreateAtividadesTable extends Migration
             $table->string('nome');
             $table->text('descricao');
             $table->date('data');
-            $table->string('foto')->nullable();  
-            $table->softDeletes();  
+            $table->string('cadeiaTrofica')->nullable();
+            $table->string('maquete')->nullable();
+            $table->unsignedBigInteger('id_reuniao');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
