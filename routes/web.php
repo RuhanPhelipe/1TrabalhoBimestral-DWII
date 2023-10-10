@@ -20,6 +20,17 @@ Route::get('/', function () {
 Route::resource('integrante', 'IntegranteController');
 Route::resource('atividade', 'AtividadeController');
 Route::resource('material', 'MaterialController');
+Route::resource('atividade_integrante', 'AtividadeIntegranteController');
+
+Route::prefix('/atividade')->group(function () {
+    Route::get('/{atividade}/addFotoReuniao', 'AtividadeController@addFotoReuniao')->name('atividade.addFotoReuniao');
+    Route::post('/{atividade}/', 'AtividadeController@storeFotoReuniao')->name('atividade.storeFotoReuniao');
+});
+
+Route::prefix('/atividade_integrante')->group(function () {
+    Route::get('/{atividade}/create', 'AtividadeIntegranteController@create')->name('atividade_integrante.create');
+    Route::post('/{atividade}/', 'AtividadeIntegranteController@store')->name('atividade_integrante.store');
+});
 
 Route::prefix('/site')->group(function() {
     Route::get('/atividade', 'SiteController@getAtividades')->name('site.atividade');

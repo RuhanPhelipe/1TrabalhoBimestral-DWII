@@ -66,11 +66,11 @@
     <div class="row">
         <div class="col" >
             <div class="input-group mb-3">
-                <span class="input-group-text bg-success text-white">Foto equipe</span>
-                <input class="form-control @if($errors->has('foto')) is-invalid @endif" type="file" name="foto"/>
-                @if($errors->has('foto'))
+                <span class="input-group-text bg-success text-white">Foto Maquete</span>
+                <input class="form-control @if($errors->has('fotoMaquete')) is-invalid @endif" type="file" name="fotoMaquete"/>
+                @if($errors->has('fotoMaquete'))
                     <div class='invalid-feedback'>
-                        {{ $errors->first('foto') }}
+                        {{ $errors->first('fotoMaquete') }}
                     </div>
                 @endif
             </div>
@@ -79,11 +79,11 @@
     <div class="row">
         <div class="col" >
             <div class="input-group mb-3">
-                <span class="input-group-text bg-success text-white">Foto atividade</span>
-                <input class="form-control @if($errors->has('foto')) is-invalid @endif" type="file" name="foto"/>
-                @if($errors->has('foto'))
+                <span class="input-group-text bg-success text-white">Foto Cadeia</span>
+                <input class="form-control @if($errors->has('fotoCadeia')) is-invalid @endif" type="file" name="fotoCadeia"/>
+                @if($errors->has('fotoCadeia'))
                     <div class='invalid-feedback'>
-                        {{ $errors->first('foto') }}
+                        {{ $errors->first('fotoCadeia') }}
                     </div>
                 @endif
             </div>

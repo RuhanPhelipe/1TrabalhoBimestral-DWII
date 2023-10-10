@@ -70,16 +70,35 @@
     <div class="row">
         <div class="col" >
             <div class="input-group mb-3">
-                <span class="input-group-text bg-success text-white">Foto</span>
+                <span class="input-group-text bg-success text-white">Foto Maquete</span>
                 <input 
-                    class="form-control @if($errors->has('foto')) is-invalid @endif" 
+                    class="form-control @if($errors->has('fotoMaquete')) is-invalid @endif" 
                     type="file" 
-                    name="foto" 
-                    value="{{$data->foto}}"
+                    name="fotoMaquete" 
+                    value="{{$data->fotoMaquete}}"
                 />
-                @if($errors->has('foto'))
+                @if($errors->has('fotoMaquete'))
                     <div class='invalid-feedback'>
-                        {{ $errors->first('foto') }}
+                        {{ $errors->first('fotoMaquete') }}
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col" >
+            <div class="input-group mb-3">
+                <span class="input-group-text bg-success text-white">Foto Equipe</span>
+                <input 
+                    class="form-control @if($errors->has('fotoCadeia')) is-invalid @endif" 
+                    type="file" 
+                    name="fotoCadeia" 
+                    value="{{$data->fotoCadeia}}"
+                />
+                @if($errors->has('fotoCadeia'))
+                    <div class='invalid-feedback'>
+                        {{ $errors->first('fotoCadeia') }}
                     </div>
                 @endif
             </div>

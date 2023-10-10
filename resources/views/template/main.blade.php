@@ -95,10 +95,12 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#000000" class="bi bi-gear-fill" viewBox="0 0 16 16">
                         <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
                     </svg>
-                @else 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#000000" class="bi bi-house-door-fill" viewBox="0 0 16 16">
-                        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
-                    </svg>
+                @else
+                    <a href="{{route('index')}}" class="navbar-brand">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#000000" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
+                        </svg>
+                    </a>
                 @endif
             </div>
             <div class="col-8 d-flex justify-content-center">
@@ -106,7 +108,7 @@
             </div>
             <div class="col-2 d-flex justify-content-end">
                 @if(isset($rota))
-                    <a href= "{{ route($rota) }}" class="btn btn-success ms-2">    
+                    <a href= "{{ route($rota) }}" class="btn btn-dark ms-2">    
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FFF" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
                         </svg>
@@ -155,9 +157,29 @@
 
 <div class="modal fade" tabindex="-1" id="fotoModal">
     <div class="modal-dialog">
-      <div class="modal-content">
-        
-      </div>
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="fotoReuniaoModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -218,7 +240,40 @@
         
         $('#fotoModal').modal().find('.modal-content').html("");
         $('#fotoModal').modal().find('.modal-content').append(img);
-        $("#fotoModal").modal('show')
+        $("#fotoModal").modal('show');
+    }
+
+    function showFotoReuniaoModal(path, array) {
+
+        let fotos = [];
+
+        array.split('"').forEach((t) => {
+            if (t.includes("fotos")) {
+                fotos.push(t);
+            }
+            
+        });
+       $('#fotoReuniaoModal').modal().find('.carousel-inner').html("");
+       for(var i = 0; i<fotos.length; i++) {
+            
+            let div_img
+            let aux_path = path+"/" + fotos[i]
+            console.log(i)
+            if(i == 0){
+                div_img = `<div class="carousel-item active">
+                                <img class="d-block w-100" src="`+aux_path+`"> 
+                           </div>`;
+                console.log(aux_path);
+            }else {
+                div_img = `<div class="carousel-item">
+                                <img class="d-block w-100" src="`+aux_path+`"> 
+                           </div>`;
+                console.log(aux_path);
+            }
+            
+            $('#fotoReuniaoModal').modal().find('.carousel-inner').append(div_img);
+        }
+        $("#fotoReuniaoModal").modal('show'); 
     }
 
     function remove() {
@@ -226,7 +281,7 @@
         let id = $('#id_remove').val();
         let form = "form_" + $('#id_remove').val();
         document.getElementById(form).submit();
-        $("#removeModal").modal('hide')
+        $("#removeModal").modal('hide');
     }
 
     function showNewYearModal(id, nome) {
